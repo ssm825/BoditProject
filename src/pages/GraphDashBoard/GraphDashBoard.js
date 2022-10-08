@@ -1,5 +1,11 @@
+import Graph from './components/Graph';
+
 const GraphDashBoard = () => {
-  return <div>GraphDashBoard</div>;
+  return (
+    <>
+      <Graph />
+    </>
+  );
 };
 
 export default GraphDashBoard;

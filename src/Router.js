@@ -8,7 +8,7 @@ const Router = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<SensorList />} />
-        <Route path="/GraphDashBoard" element={<GraphDashBoard />} />
+        <Route path="/dashboard" element={<GraphDashBoard />} />
       </Routes>
     </BrowserRouter>
   );
