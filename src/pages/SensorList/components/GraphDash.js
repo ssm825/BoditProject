@@ -3,15 +3,16 @@ import { getGraphApi } from 'api/get';
 import { DatePicker, Space } from 'antd';
 import moment from 'moment';
 const GraphDash = () => {
-  const [start, setStart] = useState('2022-10-11');
+  const [start, setStart] = useState('2022-10-01');
 
   const [buckets, setBuckets] = useState([]);
 
   const fetchData = useCallback(async () => {
     const payload = {
       start: start,
-      end: '2022-08-24',
+      end: '2022-10-02',
     };
+
     await getGraphApi(payload)
       .then(({ data }) => {
         setBuckets(data);
@@ -28,7 +29,7 @@ const GraphDash = () => {
 
   return (
     <DatePicker
-      defaultValue={moment('2021-11-11', dateFormat)}
+      defaultValue={moment(start, dateFormat)}
       onChange={(_, date) => {
         setStart(date);
       }}
