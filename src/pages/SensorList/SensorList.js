@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Breadcrumb, Layout, Menu } from 'antd';
 import styled from 'styled-components';
 import {
@@ -9,6 +9,7 @@ import {
 import 'antd/dist/antd.css';
 import './sensorlist.css';
 import TableBoard from './components/TableBoard';
+import GraphDash from './components/GraphDash';
 
 const { Content, Footer, Sider } = Layout;
 
@@ -71,6 +72,7 @@ const SensorList = () => {
           >
             센서리스트
             <TableBoard />
+            <GraphDash />
           </div>
         </Content>
         <Footer
