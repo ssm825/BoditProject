@@ -1,14 +1,8 @@
 import { Table, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import {
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-  CloseCircleOutlined,
-  ExclamationCircleOutlined,
-  MinusCircleOutlined,
-  SyncOutlined,
-} from '@ant-design/icons';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { getSensorList } from 'api/get';
+
 const columns = [
   {
     title: 'Senser Id',
@@ -23,11 +17,11 @@ const columns = [
       multiple: 9,
     },
     render: (_, { batLvl }) => (
-      <>
+      <div>
         {batLvl > 20 ? (
-          <>{batLvl}</>
+          <p>{batLvl}</p>
         ) : (
-          <>
+          <p>
             {batLvl}
             <Tag
               icon={<ExclamationCircleOutlined />}
@@ -36,9 +30,9 @@ const columns = [
             >
               배터리부족
             </Tag>
-          </>
+          </p>
         )}
-      </>
+      </div>
     ),
   },
   {
@@ -98,13 +92,9 @@ const TableBoard = () => {
   const [listDate, setListDate] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(
-        'https://s3.us-west-2.amazonaws.com/secure.notion-static.com/a1db46b3-41b2-4a81-b7c6-5f85e7842cca/sensor-info-list.json?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221008%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221008T122603Z&X-Amz-Expires=86400&X-Amz-Signature=afbcdb4a7f6463671d3738c13fa2d62f971a4f3142489de697b85743ee1b9a5e&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22sensor-info-list.json%22&x-id=GetObject'
-      )
-      .then(date => {
-        setListDate(date.data);
-      });
+    getSensorList().then(({ data }) => {
+      setListDate(data);
+    });
   }, []);
   const newArr = [];
   const aaaa = () => {
@@ -128,9 +118,6 @@ const TableBoard = () => {
   };
 
   aaaa();
-
-  console.log(newArr);
-
   return (
     <Table
       columns={columns}
