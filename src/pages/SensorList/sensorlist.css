@@ -1,12 +1,5 @@
-#components-layout-demo-side .logo {
-  height: 32px;
-  width: 100%;
-  margin: 16px;
-  background: rgba(255, 255, 255, 0.3);
-  
+#components-layout-demo-fixed .logo {
 }
-
 .site-layout .site-layout-background {
   background: #fff;
 }
-

@@ -4,11 +4,11 @@ import styled from 'styled-components';
 import { PieChartOutlined, AreaChartOutlined } from '@ant-design/icons';
 import TableBoard from './components/TableBoard';
 import Graph from 'pages/GraphDashBoard/components/Graph';
-
 import 'antd/dist/antd.css';
 import './sensorlist.css';
+import BackTopBtn from './components/BackTopBtn';
 
-const { Content, Footer, Sider } = Layout;
+const { Content, Footer, Header } = Layout;
 
 function getItem(label, key, icon, children, type) {
   return {
@@ -39,22 +39,20 @@ const SensorList = () => {
         minHeight: '100vh',
       }}
     >
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={value => setCollapsed(value)}
-      >
+      <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
         <Logo>
           <h1>Bodit</h1>
         </Logo>
+
         <Menu
           theme="dark"
+          mode="horizontal"
           defaultSelectedKeys={page}
-          onClick={onClick}
-          mode="inline"
           items={items}
+          onClick={onClick}
         />
-      </Sider>
+      </Header>
+
       <Layout className="site-layout">
         <Content
           style={{
@@ -63,7 +61,7 @@ const SensorList = () => {
         >
           <Breadcrumb
             style={{
-              margin: '16px 0',
+              margin: '30px 0',
             }}
           >
             <Breadcrumb.Item>Bodit 감지 센서 관리 프로그램</Breadcrumb.Item>
@@ -75,10 +73,9 @@ const SensorList = () => {
               minHeight: 360,
             }}
           >
-            {page === '1' && '센서 리스트'}
-            {page === '2' && '데이터 그래프'}
             {page === '1' && <TableBoard />}
             {page === '2' && <Graph />}
+            <BackTopBtn />
           </div>
         </Content>
         <Footer
@@ -94,17 +91,28 @@ const SensorList = () => {
 };
 
 const Logo = styled.div`
-  width: 100%;
-  height: 50px;
-  margin: 10px 0;
+  float: left;
+  width: 120px;
+  height: 31px;
+  margin: 16px 24px 16px 0;
+
+  @media (max-width: 530px) {
+    width: 50px;
+    margin: 16px 10px;
+  }
 
   h1 {
-    color: #fff;
     font-size: 25px;
-    font-weight: 700;
-    line-height: 50px;
+    line-height: 31px;
     text-align: center;
+    font-weight: 700;
+    color: white;
     letter-spacing: 2px;
+    @media (max-width: 530px) {
+      font-size: 20px;
+      letter-spacing: 1px;
+    }
   }
 `;
+
 export default SensorList;
