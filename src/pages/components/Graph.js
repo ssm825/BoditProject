@@ -10,7 +10,9 @@ import theme from 'styles/theme';
 
 export default function Graph() {
   const [graphData, setGraphData] = useState([]);
-  const [dateStart, setDateStart] = useState(moment().format('YYYY-MM-DD'));
+  const [dateStart, setDateStart] = useState(
+    moment().add(-1, 'day').format('YYYY-MM-DD')
+  );
   const selectedGraph = useRef([]);
 
   const styleScale = num => {
@@ -116,68 +118,59 @@ export default function Graph() {
           <MinusBtn onClick={minusBtn}>축소</MinusBtn>
         </BtnBox>
       </GraphInfo>
-      {graphData.length ? (
-        <>
-          {' '}
-          <GranphContainer>
-            <GraphItem>
-              <GraphTitle>기온</GraphTitle>
-              <GraphContent ref={tempScroll}>
-                <article ref={el => (selectedGraph.current[0] = el)}>
-                  <GraphLayout
-                    selectedDate={selectedDate}
-                    formatXAxis={formatXAxis}
-                    dataKey="field1"
-                    stroke="orange"
-                  />
-                </article>
-              </GraphContent>
-            </GraphItem>
-            <GraphItem>
-              <GraphTitle>습도</GraphTitle>
-              <GraphContent ref={humidityScroll}>
-                <article ref={el => (selectedGraph.current[1] = el)}>
-                  <GraphLayout
-                    selectedDate={selectedDate}
-                    formatXAxis={formatXAxis}
-                    dataKey="field2"
-                    stroke="cadetblue"
-                  />
-                </article>
-              </GraphContent>
-            </GraphItem>
-            <GraphItem>
-              <GraphTitle>기압</GraphTitle>
-              <GraphContent ref={pressureScroll}>
-                <article ref={el => (selectedGraph.current[2] = el)}>
-                  <GraphLayout
-                    selectedDate={selectedDate}
-                    formatXAxis={formatXAxis}
-                    dataKey="field3"
-                    stroke={`${theme.brown}`}
-                  />
-                </article>
-              </GraphContent>
-            </GraphItem>
-          </GranphContainer>
-          <Button
-            type="primary"
-            onClick={() => {
-              downloadFile();
-            }}
-          >
-            <CopyOutlined /> CSV 다운로드
-          </Button>
-        </>
-      ) : (
-        <Nodata>
-          <Spin />
-          <p>
-            선택하신 <span> {dateStart} </span> 날짜에 데이타가 없습니다.
-            <br /> 다른 날짜를 선택하세요
-          </p>
-        </Nodata>
-      )}
+
+      <>
+        {' '}
+        <GranphContainer>
+          <GraphItem>
+            <GraphTitle>기온</GraphTitle>
+            <GraphContent ref={tempScroll}>
+              <article ref={el => (selectedGraph.current[0] = el)}>
+                <GraphLayout
+                  selectedDate={selectedDate}
+                  formatXAxis={formatXAxis}
+                  dataKey="field1"
+                  stroke="orange"
+                />
+              </article>
+            </GraphContent>
+          </GraphItem>
+          <GraphItem>
+            <GraphTitle>습도</GraphTitle>
+            <GraphContent ref={humidityScroll}>
+              <article ref={el => (selectedGraph.current[1] = el)}>
+                <GraphLayout
+                  selectedDate={selectedDate}
+                  formatXAxis={formatXAxis}
+                  dataKey="field2"
+                  stroke="cadetblue"
+                />
+              </article>
+            </GraphContent>
+          </GraphItem>
+          <GraphItem>
+            <GraphTitle>기압</GraphTitle>
+            <GraphContent ref={pressureScroll}>
+              <article ref={el => (selectedGraph.current[2] = el)}>
+                <GraphLayout
+                  selectedDate={selectedDate}
+                  formatXAxis={formatXAxis}
+                  dataKey="field3"
+                  stroke={`${theme.brown}`}
+                />
+              </article>
+            </GraphContent>
+          </GraphItem>
+        </GranphContainer>
+        <Button
+          type="primary"
+          onClick={() => {
+            downloadFile();
+          }}
+        >
+          <CopyOutlined /> CSV 다운로드
+        </Button>
+      </>
     </Wrapper>
   );
 }

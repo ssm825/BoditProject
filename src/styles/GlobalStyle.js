@@ -11,6 +11,11 @@ const GlobalStyle = createGlobalStyle`
     color: black;
     cursor: pointer;
   }
+
+.site-layout-background {
+  background: #fff;
+}
+
  
 `;
 export default GlobalStyle;
