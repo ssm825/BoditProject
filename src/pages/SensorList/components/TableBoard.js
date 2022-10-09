@@ -1,12 +1,14 @@
-import { Table, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { Table, Tag } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { getSensorList } from 'api/get';
-const onChange = (pagination, filters, sorter, extra) => {
-  console.log('params', pagination, filters, sorter, extra);
-};
+
 const TableBoard = () => {
   const [listDate, setListDate] = useState([]);
+
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log('params', pagination, filters, sorter, extra);
+  };
 
   useEffect(() => {
     getSensorList().then(({ data }) => {
