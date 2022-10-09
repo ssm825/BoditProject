@@ -5,13 +5,8 @@ const GlobalStyle = createGlobalStyle`
   
   * {
     box-sizing: border-box;
-    
   }
   
-  body {
-    
-  }
-
   a {
     color: black;
     cursor: pointer;

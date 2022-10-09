@@ -1,30 +1,33 @@
-import { getGraphApi } from 'api/get';
 import { DatePicker } from 'antd';
 import moment from 'moment';
 import useSyncScroll from 'react-use-sync-scroll';
+import { getGraphApi } from 'api/get';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { GraphLayout } from './GraphLayout';
 import styled from 'styled-components';
 import theme from 'styles/theme';
-import { GraphLayout } from './GraphLayout';
 
 export default function Graph() {
   const [graphData, setGraphData] = useState([]);
-  const [start, setStart] = useState(moment().format('YYYY-MM-DD'));
-  const tempGraph = useRef();
-  const humidityGraph = useRef();
-  const pressureGraph = useRef();
+  const [dateStart, setDateStart] = useState(moment().format('YYYY-MM-DD'));
 
+  const selectedGraph = useRef([]);
+  const styleScale = num => {
+    let i = 0;
+    while (i < selectedGraph.current.length) {
+      selectedGraph.current[
+        i
+      ].style = `transform : scale(${num}); transition : 0.2s`;
+      i++;
+    }
+  };
   const plusBtn = () => {
-    tempGraph.current.style = 'transform : scale(1.5); transition : 0.2s';
-    humidityGraph.current.style = 'transform : scale(1.5); transition : 0.2s';
-    pressureGraph.current.style = 'transform : scale(1.5); transition : 0.2s';
+    styleScale('1.5');
+  };
+  const minusBtn = () => {
+    styleScale(1);
   };
 
-  const minusBtn = () => {
-    tempGraph.current.style = 'transform : scale(1); transition : 0.2s';
-    humidityGraph.current.style = 'transform : scale(1); transition : 0.2s';
-    pressureGraph.current.style = 'transform : scale(1); transition : 0.2s';
-  };
   const tempScroll = useRef(null);
   const humidityScroll = useRef(null);
   const pressureScroll = useRef(null);
@@ -37,8 +40,8 @@ export default function Graph() {
 
   const fetchData = useCallback(async () => {
     const payload = {
-      start: start,
-      end: moment(start).add(1, 'd').format('YYYY-MM-DD'),
+      start: dateStart,
+      end: moment(dateStart).add(1, 'day').format('YYYY-MM-DD'),
     };
 
     await getGraphApi(payload)
@@ -48,18 +51,15 @@ export default function Graph() {
       .catch(error => {
         console.log('error', error);
       });
-  }, [start, graphData]);
+  }, [dateStart, graphData]);
 
   useEffect(() => {
     fetchData();
-  }, [start]);
+  }, [dateStart]);
 
-  const dateData = moment(graphData.map(date => date.created_at)[0]).format(
-    'YY-MM-DD'
-  );
-  const graphTitle = moment(graphData.map(date => date.created_at)[0]).format(
-    'YYYY년 MM월 DD일'
-  );
+  const createdDate = moment(graphData.map(date => date.created_at)[0]);
+  const dateData = createdDate.format('YY-MM-DD');
+  const graphTitle = createdDate.format('YYYY년 MM월 DD일');
 
   const selectedDate = graphData.filter(
     date => moment(date.created_at.slice(0, -1)).format('YY-MM-DD') === dateData
@@ -75,9 +75,9 @@ export default function Graph() {
     <Wrapper>
       <GraphInfo>
         <DatePicker
-          defaultValue={moment(start, dateFormat)}
+          defaultValue={moment(dateStart, dateFormat)}
           onChange={(_, date) => {
-            setStart(date);
+            setDateStart(date);
           }}
           format={dateFormat}
         />
@@ -91,7 +91,7 @@ export default function Graph() {
         <GraphItem>
           <GraphTitle>기온</GraphTitle>
           <GraphContent ref={tempScroll}>
-            <article ref={tempGraph}>
+            <article ref={el => (selectedGraph.current[0] = el)}>
               <GraphLayout
                 selectedDate={selectedDate}
                 formatXAxis={formatXAxis}
@@ -104,7 +104,7 @@ export default function Graph() {
         <GraphItem>
           <GraphTitle>습도</GraphTitle>
           <GraphContent ref={humidityScroll}>
-            <article ref={humidityGraph}>
+            <article ref={el => (selectedGraph.current[1] = el)}>
               <GraphLayout
                 selectedDate={selectedDate}
                 formatXAxis={formatXAxis}
@@ -117,7 +117,7 @@ export default function Graph() {
         <GraphItem>
           <GraphTitle>기압</GraphTitle>
           <GraphContent ref={pressureScroll}>
-            <article ref={pressureGraph}>
+            <article ref={el => (selectedGraph.current[2] = el)}>
               <GraphLayout
                 selectedDate={selectedDate}
                 formatXAxis={formatXAxis}
@@ -145,6 +145,7 @@ const Wrapper = styled.section`
 const GraphInfo = styled.div`
   display: flex;
   justify-content: space-between;
+  line-height: 30px;
   .ant-picker {
   }
 `;
@@ -183,6 +184,14 @@ const MinusBtn = styled.button``;
 const GraphDate = styled.p`
   font-weight: 900;
   font-size: x-large;
+  @media (max-width: 860px) {
+    font-weight: 600;
+    font-size: large;
+  }
+
+  @media (max-width: 480px) {
+    display: none;
+  }
 `;
 
 const GranphContainer = styled.div`
@@ -193,7 +202,7 @@ const GranphContainer = styled.div`
   width: 100%;
   height: 100%;
 
-  @media (max-width: 1400px) {
+  @media (max-width: 1300px) {
     justify-content: center;
     align-content: space-around;
     margin-top: 30px;
@@ -209,10 +218,17 @@ const GraphItem = styled.div`
   width: 32%;
   height: 400px;
 
-  @media (max-width: 1400px) {
+  @media (max-width: 1300px) {
     margin: 30px 0;
     padding: 30px 0;
     width: 90%;
+  }
+
+  @media (max-width: 480px) {
+    margin: 20px 0;
+    padding: 20px 0;
+    width: 100%;
+    height: 300px;
   }
 `;
 
@@ -221,6 +237,11 @@ const GraphTitle = styled.h1`
   text-align: center;
   font-size: x-large;
   font-weight: 600;
+
+  @media (max-width: 480px) {
+    font-size: large;
+    font-weight: 600;
+  }
 `;
 
 const GraphContent = styled.div`
