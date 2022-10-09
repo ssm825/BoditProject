@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import { PieChartOutlined, AreaChartOutlined } from '@ant-design/icons';
 import TableBoard from './components/TableBoard';
 import Graph from 'pages/GraphDashBoard/components/Graph';
+import BackTopBtn from './components/BackTopBtn';
 import 'antd/dist/antd.css';
 import './sensorlist.css';
-import BackTopBtn from './components/BackTopBtn';
 
 const { Content, Footer, Header } = Layout;
 
@@ -26,7 +26,6 @@ const items = [
 ];
 
 const SensorList = () => {
-  const [collapsed, setCollapsed] = useState(false);
   const [page, setPage] = useState('1');
 
   const onClick = e => {
@@ -40,10 +39,11 @@ const SensorList = () => {
       }}
     >
       <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
-        <Logo>
-          <h1>Bodit</h1>
-        </Logo>
-
+        <a href="/">
+          <Logo>
+            <h1>Bodit</h1>
+          </Logo>
+        </a>
         <Menu
           theme="dark"
           mode="horizontal"
@@ -102,12 +102,13 @@ const Logo = styled.div`
   }
 
   h1 {
+    color: white;
     font-size: 25px;
     line-height: 31px;
     text-align: center;
     font-weight: 700;
-    color: white;
     letter-spacing: 2px;
+
     @media (max-width: 530px) {
       font-size: 20px;
       letter-spacing: 1px;
