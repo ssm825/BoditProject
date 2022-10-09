@@ -44,7 +44,9 @@ const SensorList = () => {
         collapsed={collapsed}
         onCollapse={value => setCollapsed(value)}
       >
-        <Logo />
+        <Logo>
+          <h1>Bodit</h1>
+        </Logo>
         <Menu
           theme="dark"
           defaultSelectedKeys={page}
@@ -93,7 +95,15 @@ const SensorList = () => {
 const Logo = styled.div`
   width: 100%;
   height: 50px;
-  background-color: red;
   margin: 10px 0;
+
+  h1 {
+    color: #fff;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 50px;
+    text-align: center;
+    letter-spacing: 2px;
+  }
 `;
 export default SensorList;
