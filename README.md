@@ -43,21 +43,13 @@
  ┣ 📂api
  ┃ ┗ 📜get.js
  ┣ 📂components
- ┃ ┗ 📜components.js
+ ┃ ┗ 📜BackTopBtn.js
  ┣ 📂pages
- ┃ ┣ 📂GraphDashBoard
- ┃ ┃ ┣ 📂components
- ┃ ┃ ┃ ┣ 📜Graph.js
- ┃ ┃ ┃ ┗ 📜GraphLayout.js
- ┃ ┃ ┗ 📜GraphDashBoard.js
- ┃ ┣ 📂SensorList
- ┃ ┃ ┣ 📂components
- ┃ ┃ ┃ ┣ 📜BackTopBtn.js
- ┃ ┃ ┃ ┣ 📜GraphDash.js
- ┃ ┃ ┃ ┗ 📜TableBoard.js
- ┃ ┃ ┣ 📜sensorlist.css
- ┃ ┃ ┗ 📜SensorList.js
- ┃ ┗ 📜pages.js
+ ┃ ┣ 📂components
+ ┃ ┃ ┣ 📜Graph.js
+ ┃ ┃ ┣ 📜GraphLayout.js
+ ┃ ┃ ┗ 📜TableBoard.js
+ ┃ ┗ 📜MainLayout.js
  ┣ 📂styles
  ┃ ┣ 📜GlobalStyle.js
  ┃ ┗ 📜theme.js
@@ -85,23 +77,23 @@
 
 <br>
 
-#### 센서 리스트(첫번째 화면)
+#### 센서 리스트
 
-- 센서 리스트 출력
-- 내림차순, 올림차순 정렬
+- 센서의 정보를 리스트로 구현
+- 오름/내림차순 정렬 정렬 기능
 - 다중 필터링
-- hover 기능 구현
-- 20%이하 배터리 부족 표시
+- hover 시 on-mouse 효과 구현
+- 20% 이하 배터리 부족 표시 구현
   
 <br>
 
-#### 그래프(두번째 화면)
+#### 데이터 그래프 대시 보드
 
 - 온도,습도,기압 세가지 그래프 표시
 - 특정 날짜 선택하여 해당 데이터(24시간) 확인
 - 그래프 x축 확대 / 축소 기능 구현
 - 데이터를 csv로 export
-- 입력 데이터는 API요청
+
 <br>
 
 ## 구현 내용
@@ -110,31 +102,37 @@
 
 - axios를 이용한 api 통신으로 데이터를 불러옴
 - 동적 라우팅 구현
+- moment 라이브러리로 날짜 데이터를 커스텀 하여 사용
 - 반응형 디자인 적용(web, tablet, mobile)
 
 <br>
 
-### 센서 리스트(첫번째 화면)
-
+### 센서 리스트
 
 #### 센서 목록 화면
-- ANTD 라이브러리를 사용하요 TABLE구현 
-
+- ANTD 라이브러리를 사용하여 TABLE 구현 
 
 <br>
 
-### 데이터 그래프 대시 보드(두번째 화면)
+### 데이터 그래프 대시 보드
 
 #### 그래프
-- 
+- recharts 라이브러리를 이용한 그래프 구현
+
+<br>
+
+#### 확대/축소 기능
+- transform : : scale();을 사용하여 x축 확대 구현
+- react-use-sync-scroll를 활용한 스크롤 동기화
 <br>
 
 #### 달력(날짜 선택)
-- 
+- ANTD 라이브러리 DatePicker를 사용하여 달력 구현 
+<br>
 
 #### csv export
-- 
-<br>
+- csv 버튼 구현
+
 <br><br>
 
 # 팀 노션
