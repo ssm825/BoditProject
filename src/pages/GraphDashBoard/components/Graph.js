@@ -1,145 +1,136 @@
-import axios from 'axios';
+import { getGraphApi } from 'api/get';
+import { DatePicker } from 'antd';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from 'recharts';
+import useSyncScroll from 'react-use-sync-scroll';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
-
-const Channel_ID = 1348864;
-const API_KEY = '6SKW0U97IPV2QQV9';
+import { GraphLayout } from './GraphLayout';
 
 export default function Graph() {
   const [graphData, setGraphData] = useState([]);
+  const [start, setStart] = useState(moment().format('YYYY-MM-DD'));
+  const tempGraph = useRef();
+  const humidityGraph = useRef();
+  const pressureGraph = useRef();
 
-  const graphAPI = async () => {
-    try {
-      const res = await axios.get(
-        `https://api.thingspeak.com/channels/${Channel_ID}/feeds.json`,
-        {
-          params: { api_key: API_KEY },
-        }
-      );
-      setGraphData(res.data.feeds);
-    } catch (error) {
-      console.log('error', error);
-    }
+  const plusBtn = () => {
+    tempGraph.current.style = 'transform : scale(1.5); transition : 0.2s';
+    humidityGraph.current.style = 'transform : scale(1.5); transition : 0.2s';
+    pressureGraph.current.style = 'transform : scale(1.5); transition : 0.2s';
   };
 
+  const minusBtn = () => {
+    tempGraph.current.style = 'transform : scale(1); transition : 0.2s';
+    humidityGraph.current.style = 'transform : scale(1); transition : 0.2s';
+    pressureGraph.current.style = 'transform : scale(1); transition : 0.2s';
+  };
+  const tempScroll = useRef(null);
+  const humidityScroll = useRef(null);
+  const pressureScroll = useRef(null);
+  const refsRef = useRef([tempScroll, humidityScroll, pressureScroll]);
+
+  useSyncScroll(refsRef, {
+    horizontal: true,
+    vertical: false,
+  });
+
+  const fetchData = useCallback(async () => {
+    const payload = {
+      start: start,
+      end: moment(start).add(1, 'd').format('YYYY-MM-DD'),
+    };
+
+    await getGraphApi(payload)
+      .then(({ data }) => {
+        setGraphData(data.feeds);
+      })
+      .catch(error => {
+        console.log('error', error);
+      });
+  }, [start, graphData]);
+
   useEffect(() => {
-    graphAPI();
-  }, []);
+    fetchData();
+  }, [start]);
+
+  const dateData = moment(graphData.map(date => date.created_at)[0]).format(
+    'YY-MM-DD'
+  );
+  const graphTitle = moment(graphData.map(date => date.created_at)[0]).format(
+    'YYYY/MM/DD'
+  );
 
   const selectedDate = graphData.filter(
-    date =>
-      moment(date.created_at.slice(0, -1)).format('YY-MM-DD') === '22-10-08'
+    date => moment(date.created_at.slice(0, -1)).format('YY-MM-DD') === dateData
   );
 
   const formatXAxis = tickItem => {
     return moment(tickItem).format('HH:mm');
   };
 
+  const dateFormat = 'YYYY-MM-DD';
+
   return (
     <Wrapper>
+      <button onClick={plusBtn}>+</button>
+      <button onClick={minusBtn}>-</button>
+      <DatePicker
+        defaultValue={moment(start, dateFormat)}
+        onChange={(_, date) => {
+          setStart(date);
+        }}
+        format={dateFormat}
+      />
+      <h1>{graphTitle}</h1>
       <GranphContainer>
-        <GraphContent>
+        <GraphContent ref={tempScroll}>
           <GraphTitle>기온</GraphTitle>
-          <ResponsiveContainer width={'100%'} height={'100%'}>
-            <LineChart
-              width={800}
-              height={300}
-              data={selectedDate}
-              margin={{
-                top: 40,
-                right: 30,
-                left: 0,
-                bottom: 20,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="created_at" tickFormatter={formatXAxis} />
-              <YAxis type="number" domain={['dataMin', 'dataMax']} />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="field1"
-                stroke="#8884d8"
-                activeDot={{ r: 8 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <article ref={tempGraph}>
+            <GraphLayout
+              selectedDate={selectedDate}
+              formatXAxis={formatXAxis}
+              dataKey="field1"
+              stroke="orange"
+            />
+          </article>
         </GraphContent>
-        <GraphContent>
+        <GraphContent ref={humidityScroll}>
           <GraphTitle>습도</GraphTitle>
-          <ResponsiveContainer width={'100%'} height={'100%'}>
-            <LineChart
-              width={800}
-              height={300}
-              data={selectedDate}
-              margin={{
-                top: 40,
-                right: 30,
-                left: 0,
-                bottom: 20,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="created_at" tickFormatter={formatXAxis} />
-              <YAxis type="number" domain={['dataMin', 'dataMax']} />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="field2"
-                stroke="#8884d8"
-                activeDot={{ r: 8 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <article ref={humidityGraph}>
+            <GraphLayout
+              selectedDate={selectedDate}
+              formatXAxis={formatXAxis}
+              dataKey="field2"
+              stroke="cadetblue"
+            />
+          </article>
         </GraphContent>
-        <GraphContent>
+        <GraphContent ref={pressureScroll}>
           <GraphTitle>기압</GraphTitle>
-          <ResponsiveContainer width={'100%'} height={'100%'}>
-            <LineChart
-              width={800}
-              height={300}
-              data={selectedDate}
-              margin={{
-                top: 40,
-                right: 30,
-                left: 0,
-                bottom: 20,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="created_at" tickFormatter={formatXAxis} />
-              <YAxis type="number" domain={['dataMin', 'dataMax']} />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="field3"
-                stroke="#8884d8"
-                activeDot={{ r: 8 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <article ref={pressureGraph}>
+            <GraphLayout
+              selectedDate={selectedDate}
+              formatXAxis={formatXAxis}
+              dataKey="field3"
+              stroke={`${theme.brown}`}
+            />
+          </article>
         </GraphContent>
       </GranphContainer>
     </Wrapper>
   );
 }
 
-const Wrapper = styled.section``;
+const Wrapper = styled.section`
+  box-sizing: border-box;
+  overflow: hidden;
+  height: 100vh;
+
+  @media (max-width: 1100px) {
+    height: 100%;
+  }
+`;
 const GranphContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -147,7 +138,7 @@ const GranphContainer = styled.div`
   flex-wrap: wrap;
   padding: 0 30px;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
 `;
 
 const GraphTitle = styled.h1`
@@ -162,11 +153,18 @@ const GraphContent = styled.div`
   width: 32%;
   height: 400px;
   border: 1px solid ${theme.lightGray};
+  overflow-x: scroll;
+  overflow-y: hidden;
+
+  article {
+    width: 100%;
+    height: 100%;
+  }
   .recharts-legend-wrapper {
     display: none;
   }
 
-  @media (max-width: 1200px) {
+  @media (max-width: 1100px) {
     margin: 5px 0;
     width: 100%;
   }
