@@ -3,10 +3,9 @@ import { Breadcrumb, Layout, Menu } from 'antd';
 import styled from 'styled-components';
 import { PieChartOutlined, AreaChartOutlined } from '@ant-design/icons';
 import TableBoard from './components/TableBoard';
-import Graph from 'pages/GraphDashBoard/components/Graph';
+import Graph from './components/Graph';
 import 'antd/dist/antd.css';
-import './sensorlist.css';
-import BackTopBtn from './components/BackTopBtn';
+import BackTopBtn from 'components/BackTopBtn';
 
 const { Content, Footer, Header } = Layout;
 
@@ -25,8 +24,7 @@ const items = [
   getItem('데이터 그래프', '2', <AreaChartOutlined />),
 ];
 
-const SensorList = () => {
-  const [collapsed, setCollapsed] = useState(false);
+const MainLayout = () => {
   const [page, setPage] = useState('1');
 
   const onClick = e => {
@@ -40,9 +38,11 @@ const SensorList = () => {
       }}
     >
       <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
-        <Logo>
-          <h1>Bodit</h1>
-        </Logo>
+        <a href="/">
+          <Logo>
+            <h1>Bodit</h1>
+          </Logo>
+        </a>
 
         <Menu
           theme="dark"
@@ -115,4 +115,4 @@ const Logo = styled.div`
   }
 `;
 
-export default SensorList;
+export default MainLayout;
