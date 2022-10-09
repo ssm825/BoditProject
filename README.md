@@ -1,6 +1,6 @@
 # 프리온보딩 1주차 과제 - 7Team
 
-### WEEK 1-2 - Bodit
+### WEEK 1-2 - 
 - 과제 목표 : 센서 리스트와 데이터 그래프 대시보드 화면 만들기
 - 수행 기간 : 2022/10/7 ~ 2022/10/9 (3일)
 
@@ -136,4 +136,4 @@
 <br><br>
 
 # 팀 노션
-- [링크](https://www.notion.so/wecode/7-d9c9440b686f465bbda33f31a87b6e2f)
+- [링크](https://www.notion.so/wecode/7-23bea56f76d2445db0abc48e16873cce)
