@@ -96,10 +96,11 @@ const Logo = styled.div`
   width: 100%;
   height: 50px;
   margin: 10px 0;
+
   h1 {
+    color: #fff;
     font-size: 25px;
     font-weight: 700;
-    color: #fff;
     line-height: 50px;
     text-align: center;
     letter-spacing: 2px;
