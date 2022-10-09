@@ -4,32 +4,37 @@ import styled from 'styled-components';
 import {
   FileOutlined,
   PieChartOutlined,
-  TeamOutlined,
+  AreaChartOutlined,
 } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './sensorlist.css';
 import TableBoard from './components/TableBoard';
-import GraphDash from './components/GraphDash';
+import Graph from 'pages/GraphDashBoard/components/Graph';
 
 const { Content, Footer, Sider } = Layout;
 
-function getItem(label, key, icon, children) {
+function getItem(label, key, icon, children, type) {
   return {
     key,
     icon,
     children,
     label,
+    type,
   };
 }
 
 const items = [
   getItem('센서리스트', '1', <PieChartOutlined />),
-  getItem('팀소개', '2', <TeamOutlined />),
-  getItem('SVC 다운로드', '3', <FileOutlined />),
+  getItem('팀소개', '2', <AreaChartOutlined />),
 ];
 
 const SensorList = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [page, setPage] = useState('1');
+
+  const onClick = e => {
+    setPage(e.key);
+  };
 
   return (
     <Layout
@@ -45,7 +50,8 @@ const SensorList = () => {
         <Logo />
         <Menu
           theme="dark"
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys={page}
+          onClick={onClick}
           mode="inline"
           items={items}
         />
@@ -71,8 +77,8 @@ const SensorList = () => {
             }}
           >
             센서리스트
-            <TableBoard />
-            <GraphDash />
+            {page === '1' && <TableBoard />}
+            {page === '2' && <Graph />}
           </div>
         </Content>
         <Footer
@@ -80,7 +86,7 @@ const SensorList = () => {
             textAlign: 'center',
           }}
         >
-          Ant Design ©2018 Created by Ant UED
+          Team 7
         </Footer>
       </Layout>
     </Layout>
