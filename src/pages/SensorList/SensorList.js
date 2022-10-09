@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import { Breadcrumb, Layout, Menu } from 'antd';
 import styled from 'styled-components';
-import {
-  FileOutlined,
-  PieChartOutlined,
-  AreaChartOutlined,
-} from '@ant-design/icons';
-import 'antd/dist/antd.css';
-import './sensorlist.css';
+import { PieChartOutlined, AreaChartOutlined } from '@ant-design/icons';
 import TableBoard from './components/TableBoard';
 import Graph from 'pages/GraphDashBoard/components/Graph';
+
+import 'antd/dist/antd.css';
+import './sensorlist.css';
 
 const { Content, Footer, Sider } = Layout;
 
