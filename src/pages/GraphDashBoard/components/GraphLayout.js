@@ -25,7 +25,7 @@ export const GraphLayout = ({ selectedDate, formatXAxis, dataKey, stroke }) => {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="created_at" tickFormatter={formatXAxis} />
-        <YAxis type="number" domain={['dataMin - 5.0', 'dataMax + 5.0']} />
+        <YAxis type="number" domain={['dataMin - 5.0', 'dataMax + 15.0']} />
         <Tooltip />
         <Legend />
         <Line
