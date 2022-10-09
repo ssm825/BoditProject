@@ -1,17 +1,18 @@
-import { DatePicker } from 'antd';
+import { DatePicker, Spin, Button } from 'antd';
 import moment from 'moment';
 import useSyncScroll from 'react-use-sync-scroll';
 import { getGraphApi } from 'api/get';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { GraphLayout } from './GraphLayout';
+import { CopyOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 
 export default function Graph() {
   const [graphData, setGraphData] = useState([]);
   const [dateStart, setDateStart] = useState(moment().format('YYYY-MM-DD'));
-
   const selectedGraph = useRef([]);
+
   const styleScale = num => {
     let i = 0;
     while (i < selectedGraph.current.length) {
@@ -24,6 +25,7 @@ export default function Graph() {
   const plusBtn = () => {
     styleScale('1.5');
   };
+
   const minusBtn = () => {
     styleScale(1);
   };
@@ -71,6 +73,33 @@ export default function Graph() {
 
   const dateFormat = 'YYYY-MM-DD';
 
+  const downloadFile = url => {
+    url =
+      'https://api.thingspeak.com/channels/1348864/feeds.csv?api_key=6SKW0U97IPV2QQV9&start=' +
+      dateStart +
+      '&end=' +
+      moment(dateStart).add(1, 'd').format('YYYY-MM-DD');
+    fetch(url, { method: 'GET' })
+      .then(res => {
+        return res.blob();
+      })
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'csv_feed';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(_ => {
+          window.URL.revokeObjectURL(url);
+        }, 60000);
+        a.remove();
+      })
+      .catch(err => {
+        console.error('err: ', err);
+      });
+  };
+
   return (
     <Wrapper>
       <GraphInfo>
@@ -87,47 +116,68 @@ export default function Graph() {
           <MinusBtn onClick={minusBtn}>축소</MinusBtn>
         </BtnBox>
       </GraphInfo>
-      <GranphContainer>
-        <GraphItem>
-          <GraphTitle>기온</GraphTitle>
-          <GraphContent ref={tempScroll}>
-            <article ref={el => (selectedGraph.current[0] = el)}>
-              <GraphLayout
-                selectedDate={selectedDate}
-                formatXAxis={formatXAxis}
-                dataKey="field1"
-                stroke="orange"
-              />
-            </article>
-          </GraphContent>
-        </GraphItem>
-        <GraphItem>
-          <GraphTitle>습도</GraphTitle>
-          <GraphContent ref={humidityScroll}>
-            <article ref={el => (selectedGraph.current[1] = el)}>
-              <GraphLayout
-                selectedDate={selectedDate}
-                formatXAxis={formatXAxis}
-                dataKey="field2"
-                stroke="cadetblue"
-              />
-            </article>
-          </GraphContent>
-        </GraphItem>
-        <GraphItem>
-          <GraphTitle>기압</GraphTitle>
-          <GraphContent ref={pressureScroll}>
-            <article ref={el => (selectedGraph.current[2] = el)}>
-              <GraphLayout
-                selectedDate={selectedDate}
-                formatXAxis={formatXAxis}
-                dataKey="field3"
-                stroke={`${theme.brown}`}
-              />
-            </article>
-          </GraphContent>
-        </GraphItem>
-      </GranphContainer>
+      {graphData.length ? (
+        <>
+          {' '}
+          <GranphContainer>
+            <GraphItem>
+              <GraphTitle>기온</GraphTitle>
+              <GraphContent ref={tempScroll}>
+                <article ref={el => (selectedGraph.current[0] = el)}>
+                  <GraphLayout
+                    selectedDate={selectedDate}
+                    formatXAxis={formatXAxis}
+                    dataKey="field1"
+                    stroke="orange"
+                  />
+                </article>
+              </GraphContent>
+            </GraphItem>
+            <GraphItem>
+              <GraphTitle>습도</GraphTitle>
+              <GraphContent ref={humidityScroll}>
+                <article ref={el => (selectedGraph.current[1] = el)}>
+                  <GraphLayout
+                    selectedDate={selectedDate}
+                    formatXAxis={formatXAxis}
+                    dataKey="field2"
+                    stroke="cadetblue"
+                  />
+                </article>
+              </GraphContent>
+            </GraphItem>
+            <GraphItem>
+              <GraphTitle>기압</GraphTitle>
+              <GraphContent ref={pressureScroll}>
+                <article ref={el => (selectedGraph.current[2] = el)}>
+                  <GraphLayout
+                    selectedDate={selectedDate}
+                    formatXAxis={formatXAxis}
+                    dataKey="field3"
+                    stroke={`${theme.brown}`}
+                  />
+                </article>
+              </GraphContent>
+            </GraphItem>
+          </GranphContainer>
+          <Button
+            type="primary"
+            onClick={() => {
+              downloadFile();
+            }}
+          >
+            <CopyOutlined /> CSV 다운로드
+          </Button>
+        </>
+      ) : (
+        <Nodata>
+          <Spin />
+          <p>
+            선택하신 <span> {dateStart} </span> 날짜에 데이타가 없습니다.
+            <br /> 다른 날짜를 선택하세요
+          </p>
+        </Nodata>
+      )}
     </Wrapper>
   );
 }
@@ -257,5 +307,21 @@ const GraphContent = styled.div`
   }
   .recharts-legend-wrapper {
     display: none;
+  }
+`;
+
+const Nodata = styled.div`
+  width: 100%;
+  height: 200px;
+  text-align: center;
+  margin-top: 150px;
+  p {
+    line-height: 35px;
+    padding-top: 50px;
+    font-weight: 500;
+    span {
+      color: red;
+      font-weight: 600;
+    }
   }
 `;
