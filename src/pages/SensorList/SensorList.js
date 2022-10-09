@@ -21,8 +21,8 @@ function getItem(label, key, icon, children, type) {
 }
 
 const items = [
-  getItem('센서리스트', '1', <PieChartOutlined />),
-  getItem('팀소개', '2', <AreaChartOutlined />),
+  getItem('센서 리스트', '1', <PieChartOutlined />),
+  getItem('데이터 그래프', '2', <AreaChartOutlined />),
 ];
 
 const SensorList = () => {
@@ -66,7 +66,7 @@ const SensorList = () => {
               margin: '16px 0',
             }}
           >
-            <Breadcrumb.Item>SensorList</Breadcrumb.Item>
+            <Breadcrumb.Item>Bodit 감지 센서 관리 프로그램</Breadcrumb.Item>
           </Breadcrumb>
           <div
             className="site-layout-background"
@@ -75,7 +75,8 @@ const SensorList = () => {
               minHeight: 360,
             }}
           >
-            센서리스트
+            {page === '1' && '센서 리스트'}
+            {page === '2' && '데이터 그래프'}
             {page === '1' && <TableBoard />}
             {page === '2' && <Graph />}
           </div>
