@@ -29,7 +29,7 @@
 # 프로젝트 실행 방법
 1. git clone
 ```bash
- git clone https://github.com/youngsoon12/BoditProject.git
+ $ git clone https://github.com/youngsoon12/BoditProject.git
 ```
 2. npm install
 ```bash
